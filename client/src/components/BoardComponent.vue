@@ -1,4 +1,5 @@
 <template>
+    <SubmitScore v-if="isSubmitBoxOpen" :closeBox="() => isSubmitBoxOpen = false" />
     <div class="max-w-full h-screen flex flex-col justify-center py-6 lg:py-20">
         <div class="grid grid-cols-3 mb-3">
             <div class="justify-self-start"><span class="font-semibold">{{ flagsLeft }}</span> left</div>
@@ -6,6 +7,7 @@
             <div class="justify-self-end font-semibold">{{ timeString }}</div>
         </div>
         <div
+            id="game-board"
             :style="{ 'gridTemplateColumns': `repeat(${columnCount}, auto)` }"
             class="max-w-full overflow-auto grid gap-1 p-2 bg-gray-100 border border-gray-400 rounded-lg dark:bg-gray-800 dark:border-gray-600"
             :class="(gameStatus === 'lost' && 'border-red-500 dark:border-red-500') || (gameStatus === 'won' && 'border-green-500 dark:border-green-500')"
@@ -22,15 +24,22 @@
             </template>
         </div>
         <div class="mt-5 flex items-center justify-between">
-            <button @click="restartGame">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                </svg>
-            </button>
-            <div class="flex items-center justify-center gap-2">
+            <div class="flex items-center gap-3">
+                <button @click="restartGame">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5.5 h-5.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </button>
+                <button v-if="!isSubmitPossible" @click="() => isSubmitBoxOpen = true">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5.5 h-5.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+                </button>
+            </div>
+            <div class="flex items-center gap-3">
                 <ThemeButton />
                 <a>
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.026 2C7.13295 1.99937 2.96183 5.54799 2.17842 10.3779C1.395 15.2079 4.23061 19.893 8.87302 21.439C9.37302 21.529 9.55202 21.222 9.55202 20.958C9.55202 20.721 9.54402 20.093 9.54102 19.258C6.76602 19.858 6.18002 17.92 6.18002 17.92C5.99733 17.317 5.60459 16.7993 5.07302 16.461C4.17302 15.842 5.14202 15.856 5.14202 15.856C5.78269 15.9438 6.34657 16.3235 6.66902 16.884C6.94195 17.3803 7.40177 17.747 7.94632 17.9026C8.49087 18.0583 9.07503 17.99 9.56902 17.713C9.61544 17.207 9.84055 16.7341 10.204 16.379C7.99002 16.128 5.66202 15.272 5.66202 11.449C5.64973 10.4602 6.01691 9.5043 6.68802 8.778C6.38437 7.91731 6.42013 6.97325 6.78802 6.138C6.78802 6.138 7.62502 5.869 9.53002 7.159C11.1639 6.71101 12.8882 6.71101 14.522 7.159C16.428 5.868 17.264 6.138 17.264 6.138C17.6336 6.97286 17.6694 7.91757 17.364 8.778C18.0376 9.50423 18.4045 10.4626 18.388 11.453C18.388 15.286 16.058 16.128 13.836 16.375C14.3153 16.8651 14.5612 17.5373 14.511 18.221C14.511 19.555 14.499 20.631 14.499 20.958C14.499 21.225 14.677 21.535 15.186 21.437C19.8265 19.8884 22.6591 15.203 21.874 10.3743C21.089 5.54565 16.9181 1.99888 12.026 2Z"></path></svg>
+                    <svg class="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.026 2C7.13295 1.99937 2.96183 5.54799 2.17842 10.3779C1.395 15.2079 4.23061 19.893 8.87302 21.439C9.37302 21.529 9.55202 21.222 9.55202 20.958C9.55202 20.721 9.54402 20.093 9.54102 19.258C6.76602 19.858 6.18002 17.92 6.18002 17.92C5.99733 17.317 5.60459 16.7993 5.07302 16.461C4.17302 15.842 5.14202 15.856 5.14202 15.856C5.78269 15.9438 6.34657 16.3235 6.66902 16.884C6.94195 17.3803 7.40177 17.747 7.94632 17.9026C8.49087 18.0583 9.07503 17.99 9.56902 17.713C9.61544 17.207 9.84055 16.7341 10.204 16.379C7.99002 16.128 5.66202 15.272 5.66202 11.449C5.64973 10.4602 6.01691 9.5043 6.68802 8.778C6.38437 7.91731 6.42013 6.97325 6.78802 6.138C6.78802 6.138 7.62502 5.869 9.53002 7.159C11.1639 6.71101 12.8882 6.71101 14.522 7.159C16.428 5.868 17.264 6.138 17.264 6.138C17.6336 6.97286 17.6694 7.91757 17.364 8.778C18.0376 9.50423 18.4045 10.4626 18.388 11.453C18.388 15.286 16.058 16.128 13.836 16.375C14.3153 16.8651 14.5612 17.5373 14.511 18.221C14.511 19.555 14.499 20.631 14.499 20.958C14.499 21.225 14.677 21.535 15.186 21.437C19.8265 19.8884 22.6591 15.203 21.874 10.3743C21.089 5.54565 16.9181 1.99888 12.026 2Z"></path></svg>
                 </a>
             </div>
         </div>
@@ -42,6 +51,7 @@ import {computed, defineProps, reactive, ref} from 'vue'
 import {useRouter} from "vue-router";
 import { checkLose, checkWin, createBoard, markTile, revealTile } from '@/logic/game'
 import ThemeButton from "@/components/ThemeButton"
+import SubmitScore from "@/components/SubmitScore"
 import {Tile} from "@/types"
 
 const props = defineProps<{
@@ -51,6 +61,7 @@ const props = defineProps<{
     emoji: string
 }>()
 const router = useRouter()
+const isSubmitBoxOpen = ref(false)
 
 const classes = {
     hidden: 'bg-gray-300 dark:bg-gray-600',
@@ -75,6 +86,13 @@ function getLabel(tile: Tile) {
         return labels[tile.status]
     }
 }
+
+const isSubmitPossible = computed(() => {
+    if ((props.rowCount === 20) && (props.columnCount === 20) && (props.bombCount === 66) && (gameStatus.value === 'won')) {
+        return true
+    }
+    return false
+})
 
 // create the board array of arrays
 const board = reactive(createBoard(props.rowCount, props.columnCount, props.bombCount))
@@ -174,3 +192,10 @@ function checkGameEnd(pressedTile: Tile) {
     }
 }
 </script>
+
+<style>
+#game-board::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}
+</style>

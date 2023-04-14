@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GameView from '../views/GameView.vue'
+import ScoreboardView from '../views/ScoreboardView.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -13,6 +14,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'play',
         component: GameView,
         props: (route) => ({ difficulty: route.query.difficulty })
+    },
+    {
+        path: '/score',
+        name: 'scoreboard',
+        component: ScoreboardView
     }
 ]
 
