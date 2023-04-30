@@ -60,7 +60,3 @@ def add_score():
     # add data to database
     user_score_added = scores.insert_one(request.json)
     return str(user_score_added.inserted_id)
-
-# run app
-if __name__ == '__main__':
-    app.run()
