@@ -1,18 +1,18 @@
 <template>
     <div class="h-screen flex flex-col items-center px-6 text-gray-700 dark:text-gray-300">
         <div class="max-w-xs w-full my-auto py-10">
-            <h1 class="text-6xl font-extrabold tracking-tight text-center text-black dark:text-white">unboom!</h1>
-            <div class="mt-20 flex items-center justify-between p-2 rounded-md border border-gray-400 bg-gray-100 dark:bg-gray-800 dark:border-gray-600">
+            <h1 class="text-5xl font-semibold tracking-tight text-center text-black dark:text-white">UNBOOM</h1>
+            <div class="mt-10 flex items-center justify-between p-2 rounded-md border border-gray-400 bg-gray-100 dark:bg-gray-800 dark:border-gray-600">
                 <button @click="() => changeDifficulty(-1)" class="bg-gray-300 rounded py-2 px-3 dark:bg-gray-700">Easier</button>
-                <div class="text-xl">{{ difficulties[difficulty].emoji }}</div>
+                <div class="text-lg">{{ difficulties[difficulty].title }}</div>
                 <button @click="() => changeDifficulty(1)" class="bg-gray-300 rounded py-2 px-3 dark:bg-gray-700">Harder</button>
             </div>
-            <p class="mt-4 text-gray-400 text-sm leading-normal dark:text-gray-500">If you want to upload your score, you will have to play on the hardest difficulty.</p>
-            <router-link :to="{ name: 'play', query: { difficulty } }" class="mt-4 block text-center bg-indigo-600 text-white py-2 rounded font-semibold w-full dark:bg-indigo-400 dark:text-black">Start game</router-link>
-            <router-link to="/score" class="mt-2.5 block text-center bg-indigo-100 text-indigo-600 py-2 rounded font-semibold w-full dark:bg-gray-800 dark:text-indigo-400">View leaderboard</router-link>
-            <div class="mt-6 flex items-center justify-center gap-3">
+            <p class="mt-3 text-sm leading-normal text-gray-400 dark:text-gray-500">If you want to upload your score, you will have to beat the 20x20 grid.</p>
+            <router-link :to="{ name: 'play', query: { difficulty } }" class="mt-4 block text-center rounded bg-gray-300 py-2.5 w-full dark:bg-gray-700">Start game</router-link>
+            <router-link to="/score" class="mt-2.5 block text-center rounded bg-gray-300 py-2.5 w-full dark:bg-gray-700">View leaderboard</router-link>
+            <div class="mt-6 flex items-center justify-center gap-2.5">
                 <ThemeButton />
-                <a>
+                <a href="https://github.com/victor891263/unboom" target="_blank" rel="noreferrer">
                     <svg class="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.026 2C7.13295 1.99937 2.96183 5.54799 2.17842 10.3779C1.395 15.2079 4.23061 19.893 8.87302 21.439C9.37302 21.529 9.55202 21.222 9.55202 20.958C9.55202 20.721 9.54402 20.093 9.54102 19.258C6.76602 19.858 6.18002 17.92 6.18002 17.92C5.99733 17.317 5.60459 16.7993 5.07302 16.461C4.17302 15.842 5.14202 15.856 5.14202 15.856C5.78269 15.9438 6.34657 16.3235 6.66902 16.884C6.94195 17.3803 7.40177 17.747 7.94632 17.9026C8.49087 18.0583 9.07503 17.99 9.56902 17.713C9.61544 17.207 9.84055 16.7341 10.204 16.379C7.99002 16.128 5.66202 15.272 5.66202 11.449C5.64973 10.4602 6.01691 9.5043 6.68802 8.778C6.38437 7.91731 6.42013 6.97325 6.78802 6.138C6.78802 6.138 7.62502 5.869 9.53002 7.159C11.1639 6.71101 12.8882 6.71101 14.522 7.159C16.428 5.868 17.264 6.138 17.264 6.138C17.6336 6.97286 17.6694 7.91757 17.364 8.778C18.0376 9.50423 18.4045 10.4626 18.388 11.453C18.388 15.286 16.058 16.128 13.836 16.375C14.3153 16.8651 14.5612 17.5373 14.511 18.221C14.511 19.555 14.499 20.631 14.499 20.958C14.499 21.225 14.677 21.535 15.186 21.437C19.8265 19.8884 22.6591 15.203 21.874 10.3743C21.089 5.54565 16.9181 1.99888 12.026 2Z"></path></svg>
                 </a>
             </div>
@@ -26,19 +26,19 @@ import ThemeButton from "@/components/ThemeButton.vue"
 
 const difficulties = [
     {
-        title: 'Easy',
+        title: '5x5',
         emoji: '😃'
     },
     {
-        title: 'Medium',
+        title: '10x10',
         emoji: '🙂'
     },
     {
-        title: 'Hard',
+        title: '15x15',
         emoji: '😐'
     },
     {
-        title: 'Extreme',
+        title: '20x20',
         emoji: '😠'
     }
 ]
@@ -52,20 +52,14 @@ function changeDifficulty(n: number) {
 
 <!--
 
-<div class="text-5xl font-extrabold tracking-tight text-center text-gray-300">WELCOME TO</div>
+<div class="mt-14 grid grid-cols-4 rounded border border-gray-300 dark:bg-gray-800">
+    <button v-for="(d, index) in difficulties" @click="() => difficulty = index" class="py-3" :class="(index === difficulty) && 'bg-gray-200 dark:bg-gray-50 dark:text-black'" :key="index">{{ d.title }}</button>
+</div>
 
-
-
-<h1 class="text-6xl font-extrabold tracking-tight text-center text-gray-300">UNBOOOM</h1>
-            <h2 class="mt-16 text-xl font-bold text-center">Select difficulty</h2>
-            <div class="mt-6 grid gap-3">
-                <button v-for="(d, index) in difficulties" class="flex flex-col items-center gap-0.5 border rounded py-3 text-center" :key="index">
-                    <span class="text-xl">{{ d.emoji }}</span>
-                    <span class="font-semibold">{{ d.title }}</span>
-                </button>
-            </div>
-            <div class="mt-5 text-gray-400"><span class="font-semibold">Remember</span> - if you want to upload your score, you will have to play on the extreme difficulty.</div>
-            <button class="mt-6 w-full block bg-indigo-600 text-white font-semibold rounded py-2 pb-2.5">Start game</button>
-            <button class="w-full block text-indigo-600 font-semibold rounded mt-3">View leaderboard</button>
+<div class="mt-14 flex items-center justify-between p-2 rounded-md border border-gray-400 bg-gray-100 dark:bg-gray-800 dark:border-gray-600">
+    <button @click="() => changeDifficulty(-1)" class="bg-gray-300 rounded py-2 px-3 dark:bg-gray-700">Easier</button>
+    <div class="text-xl">{{ difficulties[difficulty].title }}</div>
+    <button @click="() => changeDifficulty(1)" class="bg-gray-300 rounded py-2 px-3 dark:bg-gray-700">Harder</button>
+</div>
 
 -->

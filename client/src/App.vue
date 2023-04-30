@@ -11,4 +11,8 @@ initTheme()
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    -webkit-font-smoothing: antialiased;
+}
 </style>
