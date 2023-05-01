@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-x-auto rounded-md border border-gray-300 dark:border-gray-700">
+    <div class="overflow-x-auto rounded border border-gray-300 dark:border-gray-700">
         <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
             <thead class="bg-gray-100 dark:bg-gray-800">
                 <tr class="animate-pulse text-gray-500 text-sm">

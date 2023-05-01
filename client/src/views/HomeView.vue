@@ -9,7 +9,7 @@
             </div>
             <p class="mt-3 text-sm leading-normal text-gray-400 dark:text-gray-500">If you want to upload your score, you will have to beat the 20x20 grid.</p>
             <router-link :to="{ name: 'play', query: { difficulty } }" class="mt-4 block text-center rounded bg-gray-300 py-2.5 w-full dark:bg-gray-700">Start game</router-link>
-            <router-link to="/score" class="mt-2.5 block text-center rounded bg-gray-300 py-2.5 w-full dark:bg-gray-700">View leaderboard</router-link>
+            <router-link to="/leaderboard" class="mt-2.5 block text-center rounded bg-gray-300 py-2.5 w-full dark:bg-gray-700">View leaderboard</router-link>
             <div class="mt-6 flex items-center justify-center gap-2.5">
                 <ThemeButton />
                 <a href="https://github.com/victor891263/unboom" target="_blank" rel="noreferrer">

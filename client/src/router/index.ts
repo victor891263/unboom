@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
         props: (route) => ({ difficulty: route.query.difficulty })
     },
     {
-        path: '/score',
+        path: '/leaderboard',
         name: 'scoreboard',
         component: ScoreboardView
     },

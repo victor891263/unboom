@@ -12,3 +12,10 @@ export interface Tile {
     nearbyBombs: number;
     status: Status;
 }
+
+export interface Score {
+    _id: string,
+    name: string,
+    duration: string,
+    created: string
+}

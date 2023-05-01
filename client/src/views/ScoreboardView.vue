@@ -1,30 +1,65 @@
 <template>
     <div class="min-h-screen flex flex-col items-center px-6 text-gray-700 dark:text-gray-300">
-        <div class="max-w-xl w-full min-h-screen flex flex-col justify-center py-6 lg:py-20">
+        <div class="max-w-lg w-full min-h-screen flex flex-col justify-center py-6 lg:py-20">
             <h1 class="mb-7 text-center font-semibold text-3xl text-black dark:text-white">Leaderboard</h1>
+            <div class="sm:mb-8 mb-3.5 relative w-full mx-auto">
+                <input v-model="keyword" type="text" name="search" placeholder="Type your name here" class="w-full shadow-sm rounded bg-transparent border border-gray-300 py-2 px-3 outline-0 focus:border-indigo-600 dark:border-gray-700 dark:focus:border-indigo-400 dark:placeholder:text-gray-600" />
+                <div class="absolute top-0 right-0 pr-2.5 h-full flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" :stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400 dark:text-gray-600"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                </div>
+            </div>
             <TableSkeleton v-if="isLoading" />
-            <div v-else-if="retrieveError.length > 0" class="border rounded-md border-gray-300 flex flex-col items-center justify-center px-5 mx-auto py-10 space-y-8 text-center dark:border-gray-700">
+            <div v-else-if="retrieveError.length > 0" class="border rounded border-gray-300 flex flex-col items-center justify-center px-5 mx-auto py-10 space-y-8 text-center dark:border-gray-700">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-40 h-40 text-gray-400 dark:text-gray-600">
                     <path fill="currentColor" d="M256,16C123.452,16,16,123.452,16,256S123.452,496,256,496,496,388.548,496,256,388.548,16,256,16ZM403.078,403.078a207.253,207.253,0,1,1,44.589-66.125A207.332,207.332,0,0,1,403.078,403.078Z"></path><rect width="176" height="32" x="168" y="320" fill="currentColor"></rect><polygon fill="currentColor" points="210.63 228.042 186.588 206.671 207.958 182.63 184.042 161.37 162.671 185.412 138.63 164.042 117.37 187.958 141.412 209.329 120.042 233.37 143.958 254.63 165.329 230.588 189.37 251.958 210.63 228.042"></polygon><polygon fill="currentColor" points="383.958 182.63 360.042 161.37 338.671 185.412 314.63 164.042 293.37 187.958 317.412 209.329 296.042 233.37 319.958 254.63 341.329 230.588 365.37 251.958 386.63 228.042 362.588 206.671 383.958 182.63"></polygon>
                 </svg>
                 <p class="text-3xl">{{retrieveError}}</p>
             </div>
-            <div v-else id="scoreboard" class="overflow-auto rounded-md border border-gray-300 dark:border-gray-700">
+            <div v-else-if="sortedScores.length > 0" id="scoreboard" class="overflow-auto rounded border border-gray-300 dark:border-gray-700">
                 <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th v-for="(k, index) in Object.keys(scores[0])" class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400" :key="index">{{ k }}</th>
+                            <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">Name</th>
+                            <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">
+                                <div class="flex items-center">
+                                    <span class="mr-0.5">Duration</span>
+                                    <button @click="() => sortBy = { title: 'duration', asc: true }">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" :stroke-width="(sortBy.title === 'duration' && sortBy.asc) ? 3 : 1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" /></svg>
+                                    </button>
+                                    <button @click="() => sortBy = { title: 'duration', asc: false }">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" :stroke-width="(sortBy.title === 'duration' && !sortBy.asc) ? 3 : 1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75" /></svg>
+                                    </button>
+                                </div>
+                            </th>
+                            <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">Grid</th>
+                            <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">
+                                <div class="flex items-center">
+                                    <span class="mr-0.5">Submitted</span>
+                                    <button @click="() => sortBy = { title: 'created', asc: true }">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" :stroke-width="(sortBy.title === 'created' && sortBy.asc) ? 3 : 1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" /></svg>
+                                    </button>
+                                    <button @click="() => sortBy = { title: 'created', asc: false }">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" :stroke-width="(sortBy.title === 'created' && !sortBy.asc) ? 3 : 1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75" /></svg>
+                                    </button>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
-                        <tr v-for="(s, index) in scores" :key="index">
-                            <td v-for="(v, index) in Object.values(s)" class="whitespace-nowrap px-4 py-3" :class="index === 1 && 'font-semibold'" :key="index">{{ v }}</td>
+                        <tr v-for="(s, index) in sortedScores" :key="index">
+                            <td v-for="(v, index) in Object.values(s)" class="whitespace-nowrap px-4 py-3" :class="index === 1 && 'font-semibold'" :key="index">{{ index === 3 ? `${getTimeLabel(v)} ago` : v }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <div v-else class="border rounded border-gray-300 flex flex-col items-center justify-center px-5 mx-auto py-10 space-y-8 text-center dark:border-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-40 h-40 text-gray-400 dark:text-gray-600">
+                    <path fill="currentColor" d="M256,16C123.452,16,16,123.452,16,256S123.452,496,256,496,496,388.548,496,256,388.548,16,256,16ZM403.078,403.078a207.253,207.253,0,1,1,44.589-66.125A207.332,207.332,0,0,1,403.078,403.078Z"></path><rect width="176" height="32" x="168" y="320" fill="currentColor"></rect><polygon fill="currentColor" points="210.63 228.042 186.588 206.671 207.958 182.63 184.042 161.37 162.671 185.412 138.63 164.042 117.37 187.958 141.412 209.329 120.042 233.37 143.958 254.63 165.329 230.588 189.37 251.958 210.63 228.042"></polygon><polygon fill="currentColor" points="383.958 182.63 360.042 161.37 338.671 185.412 314.63 164.042 293.37 187.958 317.412 209.329 296.042 233.37 319.958 254.63 341.329 230.588 365.37 251.958 386.63 228.042 362.588 206.671 383.958 182.63"></polygon>
+                </svg>
+                <p class="text-3xl">Looks like you haven't submitted your score.</p>
+            </div>
             <div class="mt-6 flex items-center justify-center gap-2.5">
-                <router-link to="/">
+                <router-link to="/" class="-mr-0.5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" :stroke-width="1.25" stroke="currentColor" class="w-7 h-7">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
                     </svg>
@@ -39,28 +74,57 @@
 </template>
 
 <script lang="ts" setup>
-interface Score {
-    _id: string,
-    name: string,
-    duration: string,
-    created: string
-}
-
-import { onMounted, ref } from "vue";
+import {computed, onMounted, ref} from "vue";
 import axios from "axios"
 import ThemeButton from "@/components/ThemeButton.vue"
 import TableSkeleton from "@/components/TableSkeleton.vue"
 import handleError from "@/logic/handleError";
+import getTimeLabel from "@/logic/getTimeLabel";
+import getElapsedTime from "@/logic/getElaspedTime";
+import {Score} from "@/types";
 
-const scores = ref([])
+const scores = ref<Score[]>([])
 const retrieveError = ref('')
 const isLoading = ref(true)
+const keyword = ref('')
+const sortBy = ref({ title: 'duration', asc: true })
+
+function getSortedScores(allScores: Score[], sortProperties: { title: string, asc: boolean }) {
+    if (sortProperties.title === 'created') {
+        return allScores.sort((a, b) => {
+            if (sortProperties.asc) return getElapsedTime(a.created) - getElapsedTime(b.created)
+            return getElapsedTime(b.created) - getElapsedTime(a.created)
+        });
+    }
+    if (sortProperties.title === 'duration') {
+        return allScores.sort((a, b) => {
+            const durationA = a.duration.split(':');
+            const durationB = b.duration.split(':');
+            const minutesA = parseInt(durationA[0]);
+            const minutesB = parseInt(durationB[0]);
+            const secondsA = parseInt(durationA[1]);
+            const secondsB = parseInt(durationB[1]);
+
+            if (minutesA === minutesB) {
+                if (sortProperties.asc) return secondsA - secondsB;
+                return secondsB - secondsA;
+            } else {
+                if (sortProperties.asc) return minutesA - minutesB;
+                return minutesB - minutesA;
+            }
+        });
+    }
+    return allScores;
+}
+
+const sortedScores = computed(() => {
+    return getSortedScores(scores.value.filter(s => s.name.toLowerCase().includes(keyword.value.toLowerCase())), sortBy.value)
+})
 
 onMounted(() => {
     axios.get(process.env.VUE_APP_API_URL)
     .then(response => {
-        const newArray = response.data.map(({ _id, name, duration, created }: Score) => ({ name, duration, grid: '20x20', created }));
-        scores.value = newArray
+        scores.value = response.data.map(({ _id, name, duration, created }: Score) => ({ name, duration, grid: '20x20', created }));
     })
     .catch(error => {
         handleError(error, (msg: string) => retrieveError.value = msg)
