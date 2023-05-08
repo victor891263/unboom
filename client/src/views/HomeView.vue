@@ -1,19 +1,39 @@
 <template>
     <div class="h-screen flex flex-col items-center px-6 text-gray-700 dark:text-gray-300">
         <div class="max-w-xs w-full my-auto py-10">
-            <h1 class="text-5xl font-semibold tracking-tight text-center text-black dark:text-white">UNBOOM</h1>
-            <div class="mt-10 flex items-center justify-between p-2 rounded-md border border-gray-400 bg-gray-100 dark:bg-gray-800 dark:border-gray-600">
-                <button @click="() => changeDifficulty(-1)" class="bg-gray-300 rounded py-2 px-3 dark:bg-gray-700">Easier</button>
-                <div class="text-lg">{{ difficulties[difficulty].title }}</div>
-                <button @click="() => changeDifficulty(1)" class="bg-gray-300 rounded py-2 px-3 dark:bg-gray-700">Harder</button>
+            <h1 class="text-3xl font-black tracking-tight text-center text-black dark:text-white">Menu</h1>
+            <div class="mt-7 divide-y divide-gray-400 rounded-lg border border-gray-400 bg-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:divide-gray-600">
+                <div class="flex items-center justify-between p-2">
+                    <button @click="() => changeColumn(-1)" class="bg-gray-300 rounded-md p-2 dark:bg-gray-700">
+                        <ChevronIcon class="w-4 h-4 rotate-180" />
+                    </button>
+                    <div class="">{{ column }} columns</div>
+                    <button @click="() => changeColumn(1)" class="bg-gray-300 rounded-md p-2 dark:bg-gray-700">
+                        <ChevronIcon class="w-4 h-4" />
+                    </button>
+                </div>
+                <div class="flex items-center justify-between p-2">
+                    <button @click="() => changeRow(-1)" class="bg-gray-300 rounded-md p-2 dark:bg-gray-700">
+                        <ChevronIcon class="w-4 h-4 rotate-180" />
+                    </button>
+                    <div class="">{{ row }} rows</div>
+                    <button @click="() => changeRow(1)" class="bg-gray-300 rounded-md p-2 dark:bg-gray-700">
+                        <ChevronIcon class="w-4 h-4" />
+                    </button>
+                </div>
             </div>
-            <p class="mt-3 text-sm leading-normal text-gray-400 dark:text-gray-500">If you want to upload your score, you will have to beat the 20x20 grid.</p>
-            <router-link :to="{ name: 'play', query: { difficulty } }" class="mt-4 block text-center rounded bg-gray-300 py-2.5 w-full dark:bg-gray-700">Start game</router-link>
-            <router-link to="/leaderboard" class="mt-2.5 block text-center rounded bg-gray-300 py-2.5 w-full dark:bg-gray-700">View leaderboard</router-link>
+            <div class="flex items-center gap-1.5 mt-4 mb-4">
+                <ExclaimIcon class="mt-0.5 w-5 h-5 text-gray-400 dark:text-gray-600" />
+                <p class="text-gray-400 dark:text-gray-600">Beat the 20x20 grid to submit your score</p>
+            </div>
+            <div class="flex gap-2">
+                <router-link :to="{ name: 'play', query: { row, column } }" class="block text-center rounded-md bg-gray-300 p-2 w-full dark:bg-gray-700">Start game</router-link>
+                <router-link to="/leaderboard" class="block text-center rounded-md bg-gray-300 p-2 w-full dark:bg-gray-700">View score</router-link>
+            </div>
             <div class="mt-6 flex items-center justify-center gap-2.5">
                 <ThemeButton />
                 <a href="https://github.com/victor891263/unboom" target="_blank" rel="noreferrer">
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.026 2C7.13295 1.99937 2.96183 5.54799 2.17842 10.3779C1.395 15.2079 4.23061 19.893 8.87302 21.439C9.37302 21.529 9.55202 21.222 9.55202 20.958C9.55202 20.721 9.54402 20.093 9.54102 19.258C6.76602 19.858 6.18002 17.92 6.18002 17.92C5.99733 17.317 5.60459 16.7993 5.07302 16.461C4.17302 15.842 5.14202 15.856 5.14202 15.856C5.78269 15.9438 6.34657 16.3235 6.66902 16.884C6.94195 17.3803 7.40177 17.747 7.94632 17.9026C8.49087 18.0583 9.07503 17.99 9.56902 17.713C9.61544 17.207 9.84055 16.7341 10.204 16.379C7.99002 16.128 5.66202 15.272 5.66202 11.449C5.64973 10.4602 6.01691 9.5043 6.68802 8.778C6.38437 7.91731 6.42013 6.97325 6.78802 6.138C6.78802 6.138 7.62502 5.869 9.53002 7.159C11.1639 6.71101 12.8882 6.71101 14.522 7.159C16.428 5.868 17.264 6.138 17.264 6.138C17.6336 6.97286 17.6694 7.91757 17.364 8.778C18.0376 9.50423 18.4045 10.4626 18.388 11.453C18.388 15.286 16.058 16.128 13.836 16.375C14.3153 16.8651 14.5612 17.5373 14.511 18.221C14.511 19.555 14.499 20.631 14.499 20.958C14.499 21.225 14.677 21.535 15.186 21.437C19.8265 19.8884 22.6591 15.203 21.874 10.3743C21.089 5.54565 16.9181 1.99888 12.026 2Z"></path></svg>
+                    <GitHubIcon class="w-6 h-6" />
                 </a>
             </div>
         </div>
@@ -23,30 +43,21 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import ThemeButton from "@/components/ThemeButton.vue"
+import ChevronIcon from '@/icons/ChevronIcon.vue'
+import ExclaimIcon from '@/icons/ExclaimIcon.vue'
+import GitHubIcon from '@/icons/GitHubIcon.vue'
 
-const difficulties = [
-    {
-        title: '5x5',
-        emoji: '😃'
-    },
-    {
-        title: '10x10',
-        emoji: '🙂'
-    },
-    {
-        title: '15x15',
-        emoji: '😐'
-    },
-    {
-        title: '20x20',
-        emoji: '😠'
-    }
-]
-const difficulty = ref(0)
+const row = ref(5)
+const column = ref(5)
 
-function changeDifficulty(n: number) {
-    if ((difficulty.value + n < 0) || (difficulty.value + n > (difficulties.length - 1))) return
-    difficulty.value += n
+function changeRow(n: number) {
+    if (row.value + n < 5 || row.value + n > 20) return
+    row.value += n
+}
+
+function changeColumn(n: number) {
+    if (column.value + n < 5 || column.value + n > 20) return
+    column.value += n
 }
 </script>
 
