@@ -5,7 +5,6 @@
                 <tr class="animate-pulse text-gray-500 text-sm">
                     <th class="whitespace-nowrap p-3.5 font-normal text-left"><div class="w-12 h-4 bg-gray-300 dark:bg-gray-600"/></th>
                     <th class="whitespace-nowrap p-3.5 font-normal text-left"><div class="w-16 h-4 bg-gray-300 dark:bg-gray-600"/></th>
-                    <th class="whitespace-nowrap p-3.5 font-normal text-left"><div class="w-10 h-4 bg-gray-300 dark:bg-gray-600"/></th>
                     <th class="whitespace-nowrap p-3.5 font-normal text-left"><div class="w-14 h-4 bg-gray-300 dark:bg-gray-600"/></th>
                 </tr>
             </thead>
@@ -13,7 +12,6 @@
                     <tr v-for="(a, i) in arr" class="animate-pulse" :key="i">
                         <td class="whitespace-nowrap px-3.5 py-4 text-indigo-600 dark:text-indigo-400"><div class="w-40 h-5 bg-gray-200 dark:bg-gray-700"/></td>
                         <td class="whitespace-nowrap px-3.5 py-4 text-indigo-600 dark:text-indigo-400"><div class="w-14 h-5 bg-gray-200 dark:bg-gray-700"/></td>
-                        <td class="whitespace-nowrap px-3.5 py-4 font-bold"><div class="w-14 h-5 bg-gray-200 dark:bg-gray-700"/></td>
                         <td class="whitespace-nowrap px-3.5 py-4"><div class="w-28 h-5 bg-gray-200 dark:bg-gray-700"/></td>
                     </tr>
                 </tbody>
@@ -23,5 +21,5 @@
 
 <script lang="ts" setup>
 import createArray from "@/logic/createArray";
-const arr = createArray(8)
+const arr = createArray(6)
 </script>

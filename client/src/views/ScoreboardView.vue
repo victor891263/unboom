@@ -1,11 +1,11 @@
 <template>
     <div class="min-h-screen flex flex-col items-center px-6 text-gray-700 dark:text-gray-300">
-        <div class="max-w-lg w-full min-h-screen flex flex-col justify-center py-6 lg:py-20">
-            <h1 class="mb-7 text-center font-black text-3xl text-black dark:text-white">Leaderboard</h1>
+        <div class="max-w-md w-full min-h-screen flex flex-col justify-center py-6 lg:py-20">
+            <h1 class="mb-8 text-center font-black text-3xl text-black dark:text-white">Leaderboard</h1>
             <div class="sm:mb-8 mb-3.5 relative w-full mx-auto">
-                <input v-model="keyword" type="text" name="search" placeholder="Type your name here" class="w-full rounded-md bg-transparent border border-gray-300 py-2 px-3 outline-0 dark:border-gray-700 dark:placeholder:text-gray-600" />
-                <div class="absolute top-0 right-0 pr-2.5 h-full flex items-center">
-                    <GlassIcon class="w-5 h-5 text-gray-400 dark:text-gray-600" />
+                <input v-model="keyword" type="text" name="search" placeholder="Type your name here" class="w-full rounded-md bg-transparent border border-gray-300 py-2 px-3 pl-9 outline-0 dark:border-gray-700 dark:placeholder:text-gray-600" />
+                <div class="absolute top-0 left-2.5 h-full flex items-center">
+                    <GlassIcon class="w-[18px] h-[18px] mt-0.5 text-gray-400 dark:text-gray-600" />
                 </div>
             </div>
             <TableSkeleton v-if="isLoading" />
@@ -29,7 +29,6 @@
                                     </button>
                                 </div>
                             </th>
-                            <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">Grid</th>
                             <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">
                                 <div class="flex items-center">
                                     <span class="mr-0.5" :class="sortBy.title === 'created' ? 'font-bold' : ''">Submitted</span>
@@ -45,12 +44,12 @@
                     </thead>
                     <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
                         <tr v-for="(s, index) in sortedScores" :key="index">
-                            <td v-for="(v, index) in Object.values(s)" class="whitespace-nowrap px-4 py-3" :class="index === 1 && 'font-semibold'" :key="index">{{ index === 3 ? `${getTimeLabel(v)} ago` : v }}</td>
+                            <td v-for="(v, index) in Object.values(s)" class="whitespace-nowrap px-4 py-3" :class="index === 1 && 'font-semibold'" :key="index">{{ index === 2 ? `${getTimeLabel(v)} ago` : v }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div v-else class="border rounded border-gray-300 flex flex-col items-center justify-center px-5 mx-auto py-10 space-y-8 text-center dark:border-gray-700">
+            <div v-else class="border rounded-md border-gray-300 flex flex-col items-center justify-center px-5 mx-auto py-10 space-y-8 text-center dark:border-gray-700">
                 <FaceIcon class="w-40 h-40 text-gray-400 dark:text-gray-600" />
                 <p class="text-3xl">Looks like you haven't submitted your score.</p>
             </div>
@@ -119,7 +118,7 @@ const sortedScores = computed(() => {
 onMounted(() => {
     axios.get(process.env.VUE_APP_API_URL)
     .then(response => {
-        scores.value = response.data.map(({ _id, name, duration, created }: Score) => ({ name, duration, grid: '20x20', created }));
+        scores.value = response.data.map(({ _id, name, duration, created }: Score) => ({ name, duration, created }));
     })
     .catch(error => {
         handleError(error, (msg: string) => retrieveError.value = msg)
