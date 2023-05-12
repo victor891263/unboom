@@ -45,8 +45,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
                         <tr v-for="(s, index) in sortedScores" :key="index">
-                            <td class="whitespace-nowrap px-4 py-3">{{ index + 1 }}</td>
-                            <td v-for="(v, index) in Object.values(s)" class="whitespace-nowrap px-4 py-3" :class="index === 1 && 'font-semibold'" :key="index">{{ index === 2 ? `${getTimeLabel(v)} ago` : v }}</td>
+                            <td v-for="(v, index) in Object.values(s)" class="whitespace-nowrap px-4 py-3" :class="index === 2 && 'font-semibold'" :key="index">{{ index === 3 ? `${getTimeLabel(v)} ago` : v }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -114,7 +113,8 @@ function getSortedScores(allScores: Score[], sortProperties: { title: string, as
 }
 
 const sortedScores = computed(() => {
-    return getSortedScores(scores.value.filter(s => s.name.toLowerCase().includes(keyword.value.toLowerCase())), sortBy.value)
+    const scoresWithId = getSortedScores(scores.value, { title: 'duration', asc: true }).map((s, i) => ({ id: i + 1, ...s }))
+    return getSortedScores(scoresWithId.filter(s => s.name.toLowerCase().includes(keyword.value.toLowerCase())), sortBy.value)
 })
 
 onMounted(() => {

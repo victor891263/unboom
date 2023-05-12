@@ -24,7 +24,7 @@
             </div>
             <div class="flex items-center gap-1.5 mt-4 mb-4">
                 <ExclaimIcon class="mt-0.5 w-5 h-5 text-gray-400 dark:text-gray-600" />
-                <p class="text-gray-400 dark:text-gray-600">Beat the 20x20 grid to submit your score</p>
+                <p class="text-gray-400 dark:text-gray-600">Pick 20x20 to submit your score</p>
             </div>
             <div class="flex gap-2">
                 <router-link :to="{ name: 'play', query: { row, column } }" class="block text-center rounded-md bg-gray-300 p-2 w-full dark:bg-gray-700">Start game</router-link>
