@@ -1,9 +1,13 @@
 <template>
     <ErrorPopup v-if="submitError.length > 0" :msg="submitError" />
     <div class="max-w-full h-screen flex flex-col justify-center py-6 lg:py-20">
-        <div class="grid grid-cols-3 mb-3">
+        <div class="grid grid-cols-3 items-center mb-3">
             <div class="justify-self-start"><span class="font-semibold">{{ flagsLeft }}</span> left</div>
-            <div class="justify-self-center">{{ (gameStatus === 'won' && '🏆') || (gameStatus === 'lost' && '💀') || '🙂' }}</div>
+            <div class="justify-self-center">
+                <PrizeIcon class="w-5 h-5" v-if="gameStatus === 'won'" />
+                <SadIcon class="w-5 h-5" v-else-if="gameStatus === 'lost'" />
+                <HappyIcon class="w-5 h-5" v-else />
+            </div>
             <div class="justify-self-end font-semibold">{{ timeString }}</div>
         </div>
         <div
@@ -18,12 +22,21 @@
                     @click="() => checkForBomb(board, tile)"
                     @contextmenu="e => placeFlag(e, tile)"
                     :disabled="gameStatus !== 'playing'"
-                    :class="'h-9 w-9 rounded ' + classes[tile.status]"
+                    :class="'h-9 w-9 rounded flex items-center justify-center ' + classes[tile.status]"
                     :key="`${i}${j}`"
-                >{{ getLabel(tile) }}</button>
+                >
+                    <span v-if="typeof getLabel(tile) === 'number'" >{{ getLabel(tile) }}</span>
+                    <span v-if="getLabel(tile) === 'hidden'" ></span>
+                    <BombIcon class="w-4 h-4" v-if="getLabel(tile) === 'bomb'" />
+                    <FlagIcon class="w-3.5 h-3.5" v-if="getLabel(tile) === 'marked'" />
+                    <ExplosionIcon class="w-5 h-5" v-if="getLabel(tile) === 'detonated'" />
+                </button>
             </template>
         </div>
-        <div class="mt-5 flex items-center justify-center gap-2.5">
+        <div class="mt-5 flex items-center justify-center gap-3">
+            <button @click="() => router.go(0)">
+                <ReplayIcon class="w-[22px] h-[22px] dark:w-6 dark:h-6" />
+            </button>
             <ThemeButton />
             <a href="https://github.com/victor891263/unboom" target="_blank" rel="noreferrer">
                 <GitHubIcon class="w-6 h-6" />
@@ -49,9 +62,16 @@ import axios from "axios";
 import { checkLose, checkWin, createBoard, markTile, revealTile } from '@/logic/game'
 import ThemeButton from "@/components/ThemeButton.vue"
 import ErrorPopup from '@/components/ErrorPopup.vue';
+import BombIcon from '@/icons/BombIcon.vue'
+import FlagIcon from '@/icons/FlagIcon.vue'
+import ExplosionIcon from '@/icons/ExplosionIcon.vue'
+import HappyIcon from '@/icons/HappyIcon.vue'
+import SadIcon from '@/icons/SadIcon.vue'
+import PrizeIcon from '@/icons/PrizeIcon.vue'
 import GitHubIcon from '@/icons/GitHubIcon.vue'
 import handleError from '@/logic/handleError';
 import {Tile} from "@/types"
+import ReplayIcon from "@/icons/ReplayIcon.vue";
 
 const props = defineProps<{
     rowCount: number,
@@ -80,7 +100,7 @@ function getLabel(tile: Tile) {
         if (tile.nearbyBombs > 0) return tile.nearbyBombs
         else return ''
     } else {
-        return labels[tile.status]
+        return tile.status
     }
 }
 

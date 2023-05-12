@@ -1,8 +1,8 @@
 <template>
     <div class="h-screen flex flex-col items-center px-6 text-gray-700 dark:text-gray-300">
         <div class="max-w-xs w-full my-auto py-10">
-            <h1 class="text-3xl font-black tracking-tight text-center text-black dark:text-white">Menu</h1>
-            <div class="mt-7 divide-y divide-gray-400 rounded-lg border border-gray-400 bg-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:divide-gray-600">
+            <h1 class="text-5xl font-semibold tracking-tight text-center text-black dark:text-white">UNBOOM</h1>
+            <div class="mt-9 divide-y divide-gray-400 rounded-lg border border-gray-400 bg-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:divide-gray-600">
                 <div class="flex items-center justify-between p-2">
                     <button @click="() => changeColumn(-1)" class="bg-gray-300 rounded-md p-2 dark:bg-gray-700">
                         <ChevronIcon class="w-4 h-4 rotate-180" />

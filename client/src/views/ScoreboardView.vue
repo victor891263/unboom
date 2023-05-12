@@ -1,10 +1,10 @@
 <template>
     <div class="min-h-screen flex flex-col items-center px-6 text-gray-700 dark:text-gray-300">
-        <div class="max-w-md w-full min-h-screen flex flex-col justify-center py-6 lg:py-20">
-            <h1 class="mb-8 text-center font-black text-3xl text-black dark:text-white">Leaderboard</h1>
-            <div class="sm:mb-8 mb-3.5 relative w-full mx-auto">
-                <input v-model="keyword" type="text" name="search" placeholder="Type your name here" class="w-full rounded-md bg-transparent border border-gray-300 py-2 px-3 pl-9 outline-0 dark:border-gray-700 dark:placeholder:text-gray-600" />
-                <div class="absolute top-0 left-2.5 h-full flex items-center">
+        <div class="max-w-lg w-full min-h-screen flex flex-col justify-center py-6 lg:py-20">
+            <h1 class="mb-7 text-center font-semibold text-3xl text-black dark:text-white">Score</h1>
+            <div class="sm:mb-8 mb-4 relative w-full mx-auto">
+                <input v-model="keyword" type="text" name="search" placeholder="Type your name here" class="w-full rounded-md bg-transparent border border-gray-300 py-2 px-3 outline-0 dark:border-gray-700 dark:placeholder:text-gray-600" />
+                <div class="absolute top-0 right-3 h-full flex items-center">
                     <GlassIcon class="w-[18px] h-[18px] mt-0.5 text-gray-400 dark:text-gray-600" />
                 </div>
             </div>
@@ -17,6 +17,7 @@
                 <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-800">
                         <tr>
+                            <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">Rank</th>
                             <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">Name</th>
                             <th class="whitespace-nowrap px-4 py-2.5 text-left font-normal text-sm capitalize text-gray-500 dark:text-gray-400">
                                 <div class="flex items-center">
@@ -44,6 +45,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
                         <tr v-for="(s, index) in sortedScores" :key="index">
+                            <td class="whitespace-nowrap px-4 py-3">{{ index + 1 }}</td>
                             <td v-for="(v, index) in Object.values(s)" class="whitespace-nowrap px-4 py-3" :class="index === 1 && 'font-semibold'" :key="index">{{ index === 2 ? `${getTimeLabel(v)} ago` : v }}</td>
                         </tr>
                     </tbody>

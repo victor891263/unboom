@@ -12,8 +12,9 @@ initTheme()
 @tailwind components;
 @tailwind utilities;
 
-* {
-    font-family: 'Lato', sans-serif;
-    -webkit-font-smoothing: antialiased;
+@layer base {
+    * {
+        -webkit-font-smoothing: antialiased;
+    }
 }
 </style>
